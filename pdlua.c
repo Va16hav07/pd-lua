@@ -743,7 +743,7 @@ static void pdlua_free( t_pdlua *o /**< The object to destruct. */)
     
     // Collect garbage
     // If we don't do this here, it could potentially leak if no other pdlua objects are used afterwards
-    lua_gc(__L(), LUA_GCCOLLECT);
+    lua_gc(__L(), LUA_GCCOLLECT, 0);
     
     return;
 }
