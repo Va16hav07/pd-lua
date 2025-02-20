@@ -728,7 +728,7 @@ static t_pdlua *pdlua_new
 }
 
 /** Pd object destructor. */
-static void pdlua_free( t_pdlua *o /**< The object to destruct. */)
+static void pdlua_free(t_pdlua *o /**< The object to destruct. */)
 {
     PDLUA_DEBUG("pdlua_free: stack top %d", lua_gettop(__L()));
     lua_getglobal(__L(), "pd");
@@ -743,7 +743,11 @@ static void pdlua_free( t_pdlua *o /**< The object to destruct. */)
     
     // Collect garbage
     // If we don't do this here, it could potentially leak if no other pdlua objects are used afterwards
-    lua_gc(__L(), LUA_GCCOLLECT, 0);
+    #if LUA_VERSION_NUM >= 504  // Lua 5.4 or newer
+        lua_gc(__L(), LUA_GCCOLLECT);
+    #else  // Lua 5.3 or older
+        lua_gc(__L(), LUA_GCCOLLECT, 0);
+    #endif
     
     return;
 }
